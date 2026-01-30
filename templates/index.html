@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Phishing URL Checker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Phishing URL Checker</h1>
+    <p class="sub">Paste a URL and the model will predict <b>Safe</b> or <b>Not Safe</b>.</p>
+
+    <div class="card">
+      <label class="label" for="urlInput">URL</label>
+      <input id="urlInput" type="text" placeholder="e.g. paypal.com or https://example.com/login" />
+
+      <button id="checkBtn">Check</button>
+
+      <div id="status" class="status"></div>
+
+      <div id="result" class="result hidden">
+        <div id="badge" class="badge"></div>
+
+        <div class="grid">
+          <div class="row"><span class="k">Confidence</span><span id="confidence"></span></div>
+          <div class="row"><span class="k">P(Safe)</span><span id="pSafe"></span></div>
+          <div class="row"><span class="k">P(Not Safe)</span><span id="pNotSafe"></span></div>
+          <div class="row"><span class="k">Device</span><span id="device"></span></div>
+        </div>
+      </div>
+
+      <div class="examples">
+        <button class="chip" data-url="paypal.com">Try: paypal.com</button>
+        <button class="chip" data-url="secure-paypal.verify.ru/login">Try: suspicious</button>
+      </div>
+    </div>
+
+    <footer>
+      <small>Local demo • BERT fine-tuned for phishing URL classification</small>
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
