@@ -1,3 +1,5 @@
+// static/app.js
+
 const urlInput = document.getElementById("urlInput");
 const checkBtn = document.getElementById("checkBtn");
 const statusEl = document.getElementById("status");
@@ -9,21 +11,37 @@ const pSafeEl = document.getElementById("pSafe");
 const pNotSafeEl = document.getElementById("pNotSafe");
 const deviceEl = document.getElementById("device");
 
+// New UI progress bars (from the improved HTML)
+const safeFillEl = document.getElementById("safeFill");
+const notSafeFillEl = document.getElementById("notSafeFill");
+
 function setLoading(isLoading) {
   checkBtn.disabled = isLoading;
   statusEl.textContent = isLoading ? "Checking..." : "";
 }
 
+function toPct(prob) {
+  const n = Number(prob);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.min(100, n * 100));
+}
+
 function showResult(data) {
   resultEl.classList.remove("hidden");
 
+  // Badge
   badgeEl.textContent = data.label;
   badgeEl.className = "badge " + (data.label === "Safe" ? "safe" : "notsafe");
 
+  // Metrics
   confidenceEl.textContent = data.confidence;
   pSafeEl.textContent = data.prob_safe;
   pNotSafeEl.textContent = data.prob_not_safe;
   deviceEl.textContent = data.device || "";
+
+  // Progress bars
+  if (safeFillEl) safeFillEl.style.width = toPct(data.prob_safe) + "%";
+  if (notSafeFillEl) notSafeFillEl.style.width = toPct(data.prob_not_safe) + "%";
 }
 
 async function predict(url) {
@@ -38,7 +56,7 @@ async function predict(url) {
   return data;
 }
 
-checkBtn.addEventListener("click", async () => {
+async function handleCheck() {
   const url = urlInput.value.trim();
   resultEl.classList.add("hidden");
 
@@ -57,13 +75,20 @@ checkBtn.addEventListener("click", async () => {
   } finally {
     setLoading(false);
   }
+}
+
+checkBtn.addEventListener("click", handleCheck);
+
+// Submit on Enter
+urlInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") handleCheck();
 });
 
 // Example chips
 document.querySelectorAll(".chip").forEach(btn => {
-  btn.addEventListener("click", async () => {
+  btn.addEventListener("click", () => {
     const u = btn.getAttribute("data-url");
     urlInput.value = u;
-    checkBtn.click();
+    handleCheck();
   });
 });

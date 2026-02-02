@@ -7,39 +7,85 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="container">
-    <h1>Phishing URL Checker</h1>
-    <p class="sub">Paste a URL and the model will predict <b>Safe</b> or <b>Not Safe</b>.</p>
+  <div class="bg"></div>
 
-    <div class="card">
-      <label class="label" for="urlInput">URL</label>
-      <input id="urlInput" type="text" placeholder="e.g. paypal.com or https://example.com/login" />
+  <main class="wrap">
+    <header class="header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🛡️</div>
+        <div>
+          <h1>Phishing URL Checker</h1>
+          <p class="sub">Paste a URL to get a risk prediction from a fine-tuned BERT model.</p>
+        </div>
+      </div>
+      <a class="pill" href="/api/health" target="_blank" rel="noreferrer">API Health</a>
+    </header>
 
-      <button id="checkBtn">Check</button>
+    <section class="panel">
+      <div class="field">
+        <label class="label" for="urlInput">URL to check</label>
+        <div class="inputRow">
+          <input id="urlInput" type="text" autocomplete="off"
+                 placeholder="example: paypal.com or https://example.com/login" />
+          <button id="checkBtn" class="primary">Check</button>
+        </div>
+        <p class="hint">Tip: you can paste without <code>http://</code> — the app will add it automatically.</p>
+      </div>
 
-      <div id="status" class="status"></div>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
 
-      <div id="result" class="result hidden">
-        <div id="badge" class="badge"></div>
+      <div id="result" class="result hidden" aria-live="polite">
+        <div class="resultTop">
+          <div class="badgeWrap">
+            <div class="badge" id="badge"></div>
+            <div class="confidence">
+              <span class="k">Confidence</span>
+              <span id="confidence" class="v"></span>
+            </div>
+          </div>
 
-        <div class="grid">
-          <div class="row"><span class="k">Confidence</span><span id="confidence"></span></div>
-          <div class="row"><span class="k">P(Safe)</span><span id="pSafe"></span></div>
-          <div class="row"><span class="k">P(Not Safe)</span><span id="pNotSafe"></span></div>
-          <div class="row"><span class="k">Device</span><span id="device"></span></div>
+          <div class="bars">
+            <div class="barRow">
+              <span class="k">Safe</span>
+              <div class="bar">
+                <div class="fill" id="safeFill" style="width:0%"></div>
+              </div>
+              <span id="pSafe" class="v mono"></span>
+            </div>
+
+            <div class="barRow">
+              <span class="k">Not Safe</span>
+              <div class="bar">
+                <div class="fill danger" id="notSafeFill" style="width:0%"></div>
+              </div>
+              <span id="pNotSafe" class="v mono"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="meta">
+          <div class="metaItem">
+            <span class="k">Device</span>
+            <span id="device" class="v mono"></span>
+          </div>
+          <div class="metaItem">
+            <span class="k">Note</span>
+            <span class="v">Predictions are probabilistic; always verify suspicious links.</span>
+          </div>
         </div>
       </div>
 
       <div class="examples">
-        <button class="chip" data-url="paypal.com">Try: paypal.com</button>
-        <button class="chip" data-url="secure-paypal.verify.ru/login">Try: suspicious</button>
+        <span class="k">Quick tests:</span>
+        <button class="chip" data-url="paypal.com">paypal.com</button>
+        <button class="chip" data-url="secure-paypal.verify.ru/login">suspicious example</button>
       </div>
-    </div>
+    </section>
 
-    <footer>
+    <footer class="footer">
       <small>Local demo • BERT fine-tuned for phishing URL classification</small>
     </footer>
-  </div>
+  </main>
 
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
