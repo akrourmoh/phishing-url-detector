@@ -32,6 +32,13 @@ It includes model training, evaluation, and deployment as a web application.
 These results show strong performance in detecting phishing URLs.
 
 ---
+## 🖥️ Web Interface Demo
+
+Below is a screenshot of the phishing URL detection web interface:
+
+![Demo Screenshot](screenshot-demo.png)
+
+
 
 ## 📁 Project Structure
 
